@@ -1,9 +1,8 @@
 <?php
 /*
- * Plugin Name: WP-CORS 
- * Plugin URI: http://knowprocess.com/wp-plugins/wp-cors
+ * Plugin Name: WP-CORS-REST-API
  * Description: Simply allows you to control which external domains may make 
- *   AJAX calls to integrate your content using the CORS standard. 
+ *   AJAX calls to integrate your content using the CORS standard. With REST-API support.
  * Author: Tim Stephenson
  * Version: 0.2.1r
  * Author URI: http://knowprocess.com
