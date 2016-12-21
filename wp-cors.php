@@ -5,13 +5,13 @@
  * Description: Simply allows you to control which external domains may make 
  *   AJAX calls to integrate your content using the CORS standard. 
  * Author: Tim Stephenson
- * Version: 0.2.1
+ * Version: 0.2.1r
  * Author URI: http://knowprocess.com
  * License: GPLv2 or later
  */
 
   define("CORS_ID", 'wp-cors');
-  define("CORS_VERSION", "0.2.1");
+  define("CORS_VERSION", "0.2.1r");
   define("CORS_NAME", 'CORS');
   define("CORS_DEBUG", false);
   //require_once("includes/shortcodes.php");
@@ -23,6 +23,12 @@
     add_action( 'send_headers', 'add_cors_header' );
   }
   add_action( 'wp_ajax_cors_change_domains', 'cors_change_domains' );
+
+  # This makes it happen for the REST-API plugin
+  add_action( 'rest_api_init', function() {
+    remove_filter( 'rest_pre_serve_request', 'rest_send_cors_headers' );
+    add_filter( 'rest_pre_serve_request', 'add_cors_header');
+  }, 15 );
 
   function add_cors_header() {
     $referrer = $_SERVER['HTTP_REFERER'];
@@ -39,7 +45,8 @@
         if (CORS_DEBUG) error_log('Test referrer for match with '.$value);
         if (preg_match('#^https?://'.$value.'.*#i', $referrer) === 1) {
           if (CORS_DEBUG) error_log('Allowing CORS from '.$referrer);
-          header("Access-Control-Allow-Origin: *"); 
+            header("Access-Control-Allow-Origin: *");
+            header("Access-Control-Allow-Headers: authorization, x-csrf-token");
         } else { 
           if (CORS_DEBUG) error_log('Rejecting CORS from '.$referrer);
         }
